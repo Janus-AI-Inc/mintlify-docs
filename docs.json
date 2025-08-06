@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Janus Python SDK Doc",
   "colors": {
-    "primary": "#2563EB",
-    "light": "#60A5FA",
-    "dark": "#1E40AF"
+    "primary": "#3B82F6",
+    "light": "#93C5FD",
+    "dark": "#2563EB"
   },
   "favicon": "/favicon.svg",
   "navigation": {
