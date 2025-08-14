@@ -260,12 +260,7 @@ Rules are simple strings that describe the expected behavior:
 - **Format**: "Output must be valid JSON"
 - **Business logic**: "Must check user permissions"
 
-### **Viewing Rule Violations**
-Rule violations appear in the Janus dashboard alongside your traces:
-1. **Go to Results** at [app.withjanus.com](https://app.withjanus.com)
-2. **Select a conversation** to view detailed results
-3. **Click on the Traces tab** to see function and tool traces
-4. **Check rule compliance** for each traced operation
+
 
 ## Viewing Traces
 
@@ -304,36 +299,8 @@ Traces are automatically recorded, evaluated, and sent to the Janus platform whe
 Tracing adds some overhead to function calls. For high-frequency operations, consider selective tracing.
 </Warning>
 
-## Initializing Tracing
 
-Before using tracing functions, initialize the tracing system:
 
-```python
-import janus_sdk as janus
 
-# Initialize tracing (usually done once at startup)
-janus.init_tracing("https://api.withjanus.com", "your_janus_api_key")  # Contact team@withjanus.com to get your API key
-
-# Now you can use tracing functions
-@janus.track
-def my_function():
-    pass
-```
-
-<Info>
-Tracing is automatically initialized when you call `run_simulations()` if you haven't initialized it manually.
-</Info>
-
-## Error Handling
-
-Tracing functions handle errors gracefully:
-
-```python
-# If tracing isn't initialized, functions work normally
-record_tool_event("test_tool", "input", "output")  # No error, just no tracing
-
-# If there are network issues, tracing continues locally
-start_tool_event("external_api", "request")  # Works even if Janus API is down
-```
 
  
