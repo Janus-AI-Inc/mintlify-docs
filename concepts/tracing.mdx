@@ -5,7 +5,7 @@ description: "Learn how to trace function calls and tool usage in your AI agents
 
 ## Function Call Tracing
 
-Janus Python SDK provides comprehensive tracing capabilities to track function calls, tool usage, and performance metrics in your AI agents. This helps you understand how your agent works internally and identify bottlenecks or issues.
+Janus Python SDK provides comprehensive tracing capabilities to track function calls, tool usage, sub agent interactions, and performance metrics in your AI agents. This helps you understand how your agent works internally, how it coordinates with other agents, and identify bottlenecks or issues.
 
 ## Tracing Methods
 
@@ -34,6 +34,16 @@ async def fetch_external_data(url: str) -> str:
 The `@track` decorator automatically captures function inputs, outputs, execution time, and any errors that occur.
 </Info>
 
+You can also add rule validation to traced functions:
+
+```python
+@track(rules=["Must validate input", "Response time < 100ms"])
+def analyze_data_with_rules(data: dict) -> dict:
+    """This function call will be automatically traced and validated"""
+    # Your analysis logic here
+    return {"result": "analysis_complete"}
+```
+
 ### 2. **Manual Tracing for External Tools**
 
 For external APIs, databases, or tools that can't use the decorator:
@@ -46,6 +56,30 @@ record_tool_event("external_api", "request_data", "response_data")
 
 # Start/finish pattern for long-running operations
 handle = start_tool_event("database_query", "SELECT * FROM users")
+try:
+    result = query_database()
+    finish_tool_event(handle, result)
+except Exception as e:
+    finish_tool_event(handle, error=e)
+```
+
+You can also add rules to manual tracing:
+
+```python
+# One-shot tracing with rules
+record_tool_event(
+    "external_api", 
+    "request_data", 
+    "response_data",
+    rules=["Must use HTTPS", "Response time < 500ms"]
+)
+
+# Start/finish pattern with rules
+handle = start_tool_event(
+    "database_query", 
+    "SELECT * FROM users",
+    rules=["Must use parameterized queries", "Query timeout < 2s"]
+)
 try:
     result = query_database()
     finish_tool_event(handle, result)
@@ -88,10 +122,21 @@ agent_executor = AgentExecutor(
 - Success/failure status
 - Duration and performance data
 
+### **Sub Agent Interactions**
+- Sub agent calls and delegation patterns
+- Agent-to-agent communication flows
+- Hierarchical agent structures and relationships
+- Cross-agent context sharing and coordination
+
+### **Rule Validation**
+- Rule compliance status for each function/tool call
+- Violation details with rule descriptions
+- Rule validation timing and performance
+
 ## Tracing in Practice
 
 ### **Healthcare Example**
-From your test files, here's how tracing works in a healthcare application:
+Here's how tracing works in a healthcare application:
 
 ```python
 class HealthcareAgent:
@@ -101,9 +146,19 @@ class HealthcareAgent:
         # Analysis logic here
         return severity_assessment
 
+    @track(rules=["Must validate symptoms list", "Must return severity level"])
+    def analyze_symptom_severity_with_rules(self, symptoms: list, impact_level: str) -> dict:
+        """Automatically traced and validated function"""
+        # Analysis logic here
+        return severity_assessment
+
     async def get_medication_info(self, medication_name: str) -> str:
-        """Manual tracing for external database"""
-        handle = start_tool_event("medication_database", f"query: {medication_name}")
+        """Manual tracing with rules for external database"""
+        handle = start_tool_event(
+            "medication_database", 
+            f"query: {medication_name}",
+            rules=["Must use secure connection", "Query timeout < 2s"]
+        )
         
         try:
             # Simulate database query
@@ -137,10 +192,85 @@ agent_executor = AgentExecutor(
 )
 ```
 
+### **Advanced LangChain Integration**
+For more control over tool tracing, you can create a custom callback handler:
+
+```python
+from langchain.callbacks.base import BaseCallbackHandler
+from janus_sdk import start_tool_event, finish_tool_event
+
+class JanusLangChainCallback(BaseCallbackHandler):
+    def __init__(self):
+        self._handles = {}
+    
+    def on_agent_action(self, action, **kwargs):
+        if hasattr(action, 'tool') and action.tool:
+            self._handles[action.tool] = start_tool_event(
+                tool_name=action.tool,
+                tool_input=action.tool_input
+            )
+    
+    def on_agent_finish(self, outputs, **kwargs):
+        for tool, handle in self._handles.items():
+            finish_tool_event(handle, tool_output=str(outputs))
+        self._handles.clear()
+
+# Add to your agent executor
+executor = AgentExecutor(
+    agent=agent, 
+    tools=[your_tools], 
+    callbacks=[JanusLangChainCallback()]
+)
+```
+
+This custom implementation gives you fine-grained control over when tool events start and finish, allowing for more precise tracing of complex agent workflows.
+
+## Rule Validation
+
+### **Adding Rules to Traces**
+You can add rule validation to any traced function or tool call by passing a list of rule strings:
+
+```python
+# Function-level rules
+@track(rules=["Must validate input", "Response time < 100ms"])
+def my_function(data: dict) -> dict:
+    pass
+
+# Tool-level rules
+handle = start_tool_event(
+    "database_query", 
+    "SELECT * FROM users",
+    rules=["Must use parameterized queries", "Query timeout < 2s"]
+)
+
+# One-shot tool rules
+record_tool_event(
+    "external_api", 
+    "request_data", 
+    "response_data",
+    rules=["Must use HTTPS", "Response time < 500ms"]
+)
+```
+
+### **Rule Format**
+Rules are simple strings that describe the expected behavior:
+- **Input validation**: "Must validate input before processing"
+- **Performance**: "Response time must be under 100ms"
+- **Security**: "Must use HTTPS for external calls"
+- **Format**: "Output must be valid JSON"
+- **Business logic**: "Must check user permissions"
+
+### **Viewing Rule Violations**
+Rule violations appear in the Janus dashboard alongside your traces:
+1. **Go to Results** at [app.withjanus.com](https://app.withjanus.com)
+2. **Select a conversation** to view detailed results
+3. **Click on the Traces tab** to see function and tool traces
+4. **Check rule compliance** for each traced operation
+
 ## Viewing Traces
 
 ### **In the Janus Dashboard**
-Traces are automatically sent to the Janus platform where you can view them in the dashboard:
+Traces are automatically recorded, evaluated, and sent to the Janus platform when simulations are run. You can view them in the dashboard:
 
 1. **Go to Results** at [app.withjanus.com](https://app.withjanus.com)
 2. **Select a conversation** to view detailed results
@@ -154,6 +284,7 @@ Traces are automatically sent to the Janus platform where you can view them in t
 ### **Trace Information Available**
 - **Function calls**: Complete call stack with parameters
 - **Tool usage**: External API calls, database queries, etc.
+- **Sub agent calls**: Agent delegation, communication flows, and hierarchical structures
 - **Performance data**: Response times, token usage, throughput
 - **Error tracking**: Exceptions, failures, and debugging info
 - **Context linking**: Connection to conversation and simulation data
@@ -165,7 +296,8 @@ Traces are automatically sent to the Janus platform where you can view them in t
 - Use manual tracing for external APIs and third-party tools
 - Include meaningful tool names and input descriptions
 - Handle errors gracefully in traced functions
-- Monitor trace volume to avoid performance impact
+- Use specific, measurable rules rather than vague guidelines
+- Combine rule-based evaluation with autonomous judging for comprehensive assessment
 </Tip>
 
 <Warning>
@@ -204,22 +336,4 @@ record_tool_event("test_tool", "input", "output")  # No error, just no tracing
 start_tool_event("external_api", "request")  # Works even if Janus API is down
 ```
 
-## Next Steps
-
-<CardGroup cols={2}>
-<Card title="Evaluation Rules" icon="target" href="/concepts/evaluation">
-  Learn how rule-based evaluation works
-</Card>
-
-<Card title="LangChain Integration" icon="link" href="/tutorials/langchain-integration">
-  Integrate tracing with LangChain agents
-</Card>
-
-<Card title="Healthcare Example" icon="heart" href="/tutorials/healthcare-example">
-  See tracing in a real healthcare application
-</Card>
-
-<Card title="API Reference" icon="code" href="/api-reference/tracing-functions">
-  Detailed tracing function documentation
-</Card>
-</CardGroup> 
+ 
