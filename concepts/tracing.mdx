@@ -1,0 +1,225 @@
+---
+title: "Function Tracing"
+description: "Learn how to trace function calls and tool usage in your AI agents"
+---
+
+## Function Call Tracing
+
+Janus Python SDK provides comprehensive tracing capabilities to track function calls, tool usage, and performance metrics in your AI agents. This helps you understand how your agent works internally and identify bottlenecks or issues.
+
+## Tracing Methods
+
+### 1. **Automatic Tracing with `@track` Decorator**
+
+The simplest way to trace function calls is using the `@track` decorator:
+
+```python
+from janus_sdk import track
+
+@track
+def analyze_data(data: dict) -> dict:
+    """This function call will be automatically traced"""
+    # Your analysis logic here
+    return {"result": "analysis_complete"}
+
+@track
+async def fetch_external_data(url: str) -> str:
+    """Async functions are also supported"""
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url)
+        return response.text
+```
+
+<Info>
+The `@track` decorator automatically captures function inputs, outputs, execution time, and any errors that occur.
+</Info>
+
+### 2. **Manual Tracing for External Tools**
+
+For external APIs, databases, or tools that can't use the decorator:
+
+```python
+from janus_sdk import start_tool_event, finish_tool_event, record_tool_event
+
+# One-shot tracing for simple operations
+record_tool_event("external_api", "request_data", "response_data")
+
+# Start/finish pattern for long-running operations
+handle = start_tool_event("database_query", "SELECT * FROM users")
+try:
+    result = query_database()
+    finish_tool_event(handle, result)
+except Exception as e:
+    finish_tool_event(handle, error=e)
+```
+
+### 3. **LangChain Integration**
+
+For LangChain agents, use the custom callback:
+
+```python
+from janus_sdk import JanusLangChainCallback
+
+agent_executor = AgentExecutor(
+    agent=agent,
+    tools=[weather_tool, calculator_tool],
+    callbacks=[JanusLangChainCallback()]
+)
+```
+
+## What Gets Traced
+
+### **Function Information**
+- Function name and signature
+- Input parameters and their values
+- Return values and outputs
+- Execution time and duration
+- Error messages and stack traces
+
+### **Context Information**
+- Conversation ID and simulation context
+- Parent function calls (call stack)
+- Timestamps and sequence information
+- Performance metrics
+
+### **Tool Usage**
+- Tool name and input parameters
+- Tool output and results
+- Success/failure status
+- Duration and performance data
+
+## Tracing in Practice
+
+### **Healthcare Example**
+From your test files, here's how tracing works in a healthcare application:
+
+```python
+class HealthcareAgent:
+    @track
+    def analyze_symptom_severity(self, symptoms: list, impact_level: str) -> dict:
+        """Automatically traced function"""
+        # Analysis logic here
+        return severity_assessment
+
+    async def get_medication_info(self, medication_name: str) -> str:
+        """Manual tracing for external database"""
+        handle = start_tool_event("medication_database", f"query: {medication_name}")
+        
+        try:
+            # Simulate database query
+            await asyncio.sleep(0.5)
+            result = "Medication information retrieved"
+            finish_tool_event(handle, result)
+            return result
+        except Exception as e:
+            finish_tool_event(handle, error=e)
+            return f"Error: {str(e)}"
+```
+
+### **LangChain Integration Example**
+For LangChain agents, tracing happens automatically:
+
+```python
+class WeatherTool(BaseTool):
+    name: str = "search_weather"
+    description: str = "Get weather information for a location"
+    
+    def _run(self, location: str):
+        # This tool call will be automatically traced
+        return f"Weather for {location}: Sunny, 75°F"
+
+# The callback automatically traces all tool calls
+callback = JanusLangChainCallback()
+agent_executor = AgentExecutor(
+    agent=agent,
+    tools=[WeatherTool()],
+    callbacks=[callback]
+)
+```
+
+## Viewing Traces
+
+### **In the Janus Dashboard**
+Traces are automatically sent to the Janus platform where you can view them in the dashboard:
+
+1. **Go to Results** at [app.withjanus.com](https://app.withjanus.com)
+2. **Select a conversation** to view detailed results
+3. **Click on the Traces tab** to see:
+   - Function call hierarchy
+   - Input/output values
+   - Execution timing
+   - Error details
+   - Performance metrics
+
+### **Trace Information Available**
+- **Function calls**: Complete call stack with parameters
+- **Tool usage**: External API calls, database queries, etc.
+- **Performance data**: Response times, token usage, throughput
+- **Error tracking**: Exceptions, failures, and debugging info
+- **Context linking**: Connection to conversation and simulation data
+
+## Best Practices
+
+<Tip>
+- Use `@track` for internal functions that you control
+- Use manual tracing for external APIs and third-party tools
+- Include meaningful tool names and input descriptions
+- Handle errors gracefully in traced functions
+- Monitor trace volume to avoid performance impact
+</Tip>
+
+<Warning>
+Tracing adds some overhead to function calls. For high-frequency operations, consider selective tracing.
+</Warning>
+
+## Initializing Tracing
+
+Before using tracing functions, initialize the tracing system:
+
+```python
+import janus_sdk as janus
+
+# Initialize tracing (usually done once at startup)
+janus.init_tracing("https://api.withjanus.com", "your_janus_api_key")  # Contact team@withjanus.com to get your API key
+
+# Now you can use tracing functions
+@janus.track
+def my_function():
+    pass
+```
+
+<Info>
+Tracing is automatically initialized when you call `run_simulations()` if you haven't initialized it manually.
+</Info>
+
+## Error Handling
+
+Tracing functions handle errors gracefully:
+
+```python
+# If tracing isn't initialized, functions work normally
+record_tool_event("test_tool", "input", "output")  # No error, just no tracing
+
+# If there are network issues, tracing continues locally
+start_tool_event("external_api", "request")  # Works even if Janus API is down
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="Evaluation Rules" icon="target" href="/concepts/evaluation">
+  Learn how rule-based evaluation works
+</Card>
+
+<Card title="LangChain Integration" icon="link" href="/tutorials/langchain-integration">
+  Integrate tracing with LangChain agents
+</Card>
+
+<Card title="Healthcare Example" icon="heart" href="/tutorials/healthcare-example">
+  See tracing in a real healthcare application
+</Card>
+
+<Card title="API Reference" icon="code" href="/api-reference/tracing-functions">
+  Detailed tracing function documentation
+</Card>
+</CardGroup> 

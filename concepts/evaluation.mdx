@@ -1,0 +1,237 @@
+---
+title: "Evaluation & Judging"
+description: "Learn how Janus evaluates AI agent performance using rule-based judging and hallucination detection"
+---
+
+## Rule-Based Evaluation
+
+Janus Python SDK provides comprehensive evaluation of AI agent performance through rule-based judging and hallucination detection. This helps you identify issues, measure quality, and ensure your agents meet your standards.
+
+## How Evaluation Works
+
+### 1. **Rule-Based Judging**
+Define custom rules that evaluate each agent response:
+
+```python
+rules = [
+    "The agent should be helpful and informative",
+    "The agent should not provide medical advice",
+    "The agent should stay within the conversation context",
+    "The agent should be polite and professional"
+]
+
+results = await janus.run_simulations(
+    num_simulations=20,
+    max_turns=8,
+    target_agent=lambda: MyAgent().chat,
+    api_key="your_janus_api_key",
+    rules=rules
+)
+```
+
+### 2. **Autonomous Investigation**
+Janus runs an autonomous judging system that evaluates agent responses for:
+- **Usefulness**: How helpful and relevant the response is
+- **Accuracy**: Whether the information provided is correct
+- **Appropriateness**: Whether the response fits the context
+- **Safety**: Whether the response follows safety guidelines
+
+### 3. **Hallucination Detection**
+Detect when agents make claims that can't be verified:
+
+```python
+# Enable RAG hallucination detection
+results = await janus.run_simulations(
+    num_simulations=15,
+    max_turns=6,
+    target_agent=lambda: MyAgent().chat,
+    api_key="your_janus_api_key",
+    # RAG hallucination detection is configured in the frontend
+)
+```
+
+## Evaluation Components
+
+### **Turn-Level Rules**
+Rules that apply to each individual response:
+
+<CardGroup cols={2}>
+<Card title="Content Rules" icon="file-text">
+  - Accuracy of information
+  - Completeness of responses
+  - Relevance to the question
+</Card>
+
+<Card title="Behavior Rules" icon="user">
+  - Politeness and professionalism
+  - Helpfulness and engagement
+  - Appropriate tone and style
+</Card>
+
+<Card title="Safety Rules" icon="shield">
+  - No harmful advice
+  - No personal information sharing
+  - Compliance with guidelines
+</Card>
+
+<Card title="Context Rules" icon="brain">
+  - Staying on topic
+  - Maintaining conversation flow
+  - Appropriate level of detail
+</Card>
+</CardGroup>
+
+### **Conversation-Level Rules**
+Rules that evaluate the entire conversation:
+
+```python
+conversation_rules = [
+    "The conversation should reach a satisfactory conclusion",
+    "The agent should maintain consistency throughout",
+    "The agent should not contradict previous statements"
+]
+```
+
+## Integration with Janus Platform
+
+### **Frontend Rule Configuration**
+Through the Janus dashboard at [app.withjanus.com](https://app.withjanus.com), you can:
+
+1. **Create Rule Sets**: Define comprehensive evaluation criteria
+   - Write individual rules for each conversation turn
+   - Define overall conversation rules
+   - Use pre-built rule templates (polite/helpful, no deflection, user satisfaction)
+
+2. **Upload Knowledge Base**: Enable RAG hallucination detection
+   - Upload documents that agents should reference
+   - Configure RAG hallucination judge to detect unsupported claims
+
+3. **Test Case Management**: Create structured evaluation scenarios
+   - Define test case content and context
+   - Upload evaluation datasets for comparison testing
+
+### **Results Analysis**
+View detailed evaluation results in the dashboard at [app.withjanus.com](https://app.withjanus.com):
+
+#### **Rules Violations Tab**
+- Specific rules violated in each turn
+- Detailed explanations of why violations occurred
+- Expandable rule details with context
+- Severity levels for different violations
+
+#### **RAG Hallucinations Tab**
+- Claims made by the agent that couldn't be verified
+- Confidence scores for each claim
+- Reference checking results
+- Detailed breakdown of what was hallucinated vs. verified
+
+#### **Investigation Results Tab**
+- Turn-by-turn investigation of agent behavior
+- Usefulness assessments with reasoning
+- Autonomous judging results
+- Quality scores and recommendations
+
+## Example: Customer Service Evaluation
+
+```python
+# Define customer service evaluation rules
+customer_service_rules = [
+    "The agent should be polite and professional",
+    "The agent should provide accurate information",
+    "The agent should escalate complex issues appropriately",
+    "The agent should maintain a helpful tone",
+    "The agent should not make promises they can't keep"
+]
+
+# Run evaluation
+results = await janus.run_simulations(
+    num_simulations=30,
+    max_turns=6,
+    target_agent=lambda: CustomerServiceAgent().chat,
+    api_key="your_janus_api_key",
+    context="You are a customer testing a new AI customer service assistant.",
+    goal="Test the AI assistant's ability to handle customer inquiries professionally.",
+    rules=customer_service_rules
+)
+
+# Analyze results
+for result in results:
+    if 'evaluation' in result:
+        rule_scores = result['evaluation'].get('rule_scores', {})
+        overall_score = result['evaluation'].get('overall_score', 0)
+        print(f"Overall score: {overall_score}")
+        for rule, score in rule_scores.items():
+            print(f"  {rule}: {score}")
+```
+
+## Evaluation Metrics
+
+### **Rule Compliance Scores**
+Each rule gets a score from 0.0 to 1.0:
+- **1.0**: Perfect compliance
+- **0.8-0.9**: Good compliance with minor issues
+- **0.6-0.7**: Moderate compliance with some problems
+- **Below 0.6**: Significant compliance issues
+
+### **Overall Performance Score**
+Combined score based on all rules and autonomous judging:
+- **0.9-1.0**: Excellent performance
+- **0.8-0.9**: Good performance
+- **0.7-0.8**: Acceptable performance
+- **Below 0.7**: Needs improvement
+
+### **Hallucination Detection**
+- **Confidence scores** for each claim made
+- **Verification status** (verified, unverified, contradicted)
+- **Source references** when available
+
+## Best Practices
+
+<Tip>
+- Start with a few key rules and expand gradually
+- Use specific, measurable rules rather than vague guidelines
+- Test rules with a small number of simulations first
+- Monitor false positives and adjust rules accordingly
+- Combine rule-based evaluation with autonomous judging for comprehensive assessment
+</Tip>
+
+<Warning>
+Rules should be clear and unambiguous. Vague rules may lead to inconsistent evaluation results.
+</Warning>
+
+## Advanced Configuration
+
+### **Custom Judge Models**
+Configure which model to use for evaluation:
+
+```python
+# Use a different model for judging (configured via environment variable)
+# JANUS_JUDGE_MODEL=openai/gpt-4.1-mini  # Default
+# JANUS_JUDGE_MODEL=anthropic/claude-3-sonnet  # Alternative
+```
+
+### **Multiple Judges**
+Run multiple judges for more reliable evaluation:
+
+```python
+# The SDK automatically runs multiple judges for consensus
+# This is configured internally for reliability
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+<Card title="Agent Testing" icon="flask" href="/concepts/agent-testing">
+  Learn how automated testing works
+</Card>
+
+<Card title="Function Tracing" icon="route" href="/concepts/tracing">
+  Understand how to trace function calls
+</Card>
+
+
+
+<Card title="API Reference" icon="code" href="/api-reference/run-simulations">
+  Detailed API documentation
+</Card>
+</CardGroup> 
