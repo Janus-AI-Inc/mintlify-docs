@@ -10,35 +10,35 @@ The Janus webapp works hand-in-hand with the Python SDK to provide a comprehensi
 ## Overview
 
 The webapp provides three main areas for configuration:
-- **Test & Rules**: Define test cases and evaluation rules
-- **Chat**: Configure simulation templates and run simulations
+- **Test & Rules**: Define test cases, evaluation rules, and knowledge base
+- **Chat**: Configure simulation templates and run chat simulations  
 - **Results**: Analyze performance and export data
 
 ## Test & Rules Configuration
 
 ### Test Cases
-
 Navigate to **Test & Rules → Test Cases** to create and manage your test queries:
 
-1. **Create Test Cases**: Add specific queries you want to test against
-2. **Set Context**: Provide background information and goals for each test case
-3. **Define Expectations**: Specify what constitutes a successful response
-4. **Organize by Category**: Group related test cases for better organization
+- **Create Test Cases**: Add specific queries you want to test against
+- **Set Context**: Provide background information and goals for each test case
+- **Define Expectations**: Specify what constitutes a successful response
+- **Organize by Category**: Group related test cases for better organization
 
 **Example Test Case Structure:**
-- **Query**: "What are the side effects of medication X?"
-- **Context**: Healthcare scenario, patient asking about medication
-- **Goal**: Ensure agent provides accurate medical information
-- **Category**: Healthcare, Medication Safety
+```
+Query: "What are the side effects of medication X?"
+Context: Healthcare scenario, patient asking about medication
+Goal: Ensure agent provides accurate medical information
+Category: Healthcare, Medication Safety
+```
 
 ### Rule Sets
-
 Go to **Test & Rules → Rule Sets** to define evaluation criteria:
 
-1. **Compliance Rules**: Ensure responses follow company policies
-2. **Quality Checks**: Validate response accuracy and completeness
-3. **Behavioral Constraints**: Set boundaries for agent behavior
-4. **Domain-Specific Rules**: Industry-specific requirements
+- **Compliance Rules**: Ensure responses follow company policies
+- **Quality Checks**: Validate response accuracy and completeness
+- **Behavioral Constraints**: Set boundaries for agent behavior
+- **Domain-Specific Rules**: Industry-specific requirements
 
 **Common Rule Categories:**
 - **Safety**: No medical advice, no harmful content
@@ -46,38 +46,54 @@ Go to **Test & Rules → Rule Sets** to define evaluation criteria:
 - **Compliance**: Follow regulatory requirements
 - **Tone**: Professional, helpful, appropriate
 
-## Simulation Templates
+### Knowledge Base
+Access **Test & Rules → Knowledge Base** to upload documents for hallucination detection:
 
-### Chat Page Configuration
+- **Document Upload**: Support for PDF, DOCX, TXT, and other formats
+- **RAG Hallucination Detection**: Automatically detect when agents make false claims
+- **File Management**: Organize and manage uploaded documents
+- **Status Tracking**: Monitor upload progress and processing status
 
-The **Chat page** is where you configure simulation parameters:
+**Supported File Types:**
+- PDF documents
+- Word documents (DOCX)
+- Text files (TXT)
+- Markdown files (MD)
+- CSV files
 
-1. **Create Templates**: Set up different simulation configurations
-2. **Configure Personas**: Define user characteristics and behaviors
-3. **Set Parameters**: Adjust simulation length, complexity, and goals
-4. **Star Templates**: Mark templates as active for testing
+## Chat Simulation Configuration
+
+### Chat Templates
+The **Chat** page is where you configure simulation parameters:
+
+- **Create Templates**: Set up different simulation configurations
+- **Configure Personas**: Define user characteristics and behaviors
+- **Set Parameters**: Adjust simulation length, complexity, and goals
+- **Star Templates**: Mark templates as active for testing
 
 **Template Configuration Options:**
+- **Test Cases**: Select specific test cases or randomize
+- **Rule Sets**: Choose evaluation criteria for responses
 - **User Personas**: Different personality types, knowledge levels
-- **Conversation Flow**: Expected interaction patterns
-- **Context Data**: Background information for simulations
-- **Success Criteria**: What defines a successful conversation
+- **Demographics**: Age range (18-100), gender, race, residence area
+- **Economic**: Annual income range ($0-$1M)
+- **Psychological**: Personality types (MBTI), emotions, urgency levels
+- **Communication**: Language proficiency, conversation intensity
+- **Behavioral**: Patience level, complaint propensity
+- **Occupation**: Custom occupation tags
+- **Miscellaneous Notes**: Additional context or constraints
+- **CSV Data Integration**: Upload user data for personalized simulations
+- **Assignment Strategies**: Sequential, random, or round-robin user assignment
+- **RAG Hallucination Judge**: Enable AI-powered factual accuracy verification
 
-<Warning>
-You can only use one template at a time. Star the template you want to test against.
-</Warning>
+**CSV Requirements:**
+- Must include a `user_id` column
+- Each row becomes a unique synthetic user
+- Supports custom fields for personalization
 
 ## Running Simulations
 
-### From the Webapp
-
-1. **Select Template**: Choose your active simulation template
-2. **Configure Parameters**: Set number of simulations and turns
-3. **Launch**: Start simulations directly from the webapp
-4. **Monitor Progress**: Track simulation execution in real-time
-
 ### From the SDK
-
 Use the webapp configuration with your SDK code:
 
 ```python
@@ -97,16 +113,25 @@ await run_simulations(
 ## Results and Analysis
 
 ### Viewing Results
-
 Navigate to **Results** to analyze your simulation outcomes:
 
-1. **Conversation Logs**: Full transcript of each simulation
-2. **Performance Metrics**: Response times, token usage, success rates
-3. **Rule Violations**: Instances where rules were broken
-4. **Tool Usage**: Detailed tracing of function calls and API usage
+- **Conversation Logs**: Full transcript of each simulation
+- **Performance Metrics**: Response times, token usage, success rates
+- **Rule Violations**: Instances where rules were broken
+- **Tool Usage**: Detailed tracing of function calls and API usage
+- **RAG Hallucinations**: Detected factual inaccuracies against knowledge base
+
+**Available Analysis Tabs:**
+- **Transcript**: Full conversation flow with metrics and function calls
+- **Rules**: Individual rule violations with context
+- **Overall**: Overall rule compliance assessment
+- **Functions**: Detailed function call traces and performance
+- **Hallucinations**: RAG accuracy verification results
+- **Investigation**: Janus's intelligent third-party judging system that autonomously analyzes every simulation to identify potential issues, anomalies, and areas that warrant your attention - think of it as your AI-powered quality assurance team that never sleeps
+- **Eval**: Evaluation comparisons (when available)
+- **Identity**: User persona and backstory details used in simulation
 
 ### Exporting Data
-
 **Evals Export**: Download results in JSON format for:
 - Internal benchmarking
 - Fine-tuning models
@@ -118,81 +143,45 @@ Navigate to **Results** to analyze your simulation outcomes:
 ## Insights and Reporting
 
 ### AI Performance Reports
-
 The **Insights** feature provides:
 
-1. **Performance Analysis**: Comprehensive evaluation of agent behavior
-2. **Issue Clustering**: Groups similar problems for easier resolution
-3. **Recommendations**: Actionable suggestions for improvement
-4. **Progress Tracking**: Monitor resolved issues over time
+- **Performance Analysis**: Comprehensive evaluation of agent behavior
+- **Issue Clustering**: Groups similar problems for easier resolution
+- **Recommendations**: Actionable suggestions for improvement
+- **Progress Tracking**: Monitor resolved issues over time
+- **Trend Analysis**: Track performance over multiple test runs
 
 ### Continuous Improvement
-
-- **Trend Analysis**: Track performance over multiple test runs
 - **Benchmarking**: Compare against previous versions
 - **A/B Testing**: Evaluate different agent configurations
 - **Compliance Monitoring**: Ensure ongoing adherence to rules
-
-## Advanced Features
-
-### Custom Integrations
-
-- **Webhook Support**: Real-time notifications for simulation events
-- **API Access**: Programmatic access to webapp data
-- **Third-party Tools**: Integrate with your existing workflow tools
-
-### Team Collaboration
-
-- **Shared Workspaces**: Collaborate with team members
-- **Role-based Access**: Control who can configure and view results
-- **Audit Logs**: Track changes and configuration updates
+- **Performance Trends**: Visualize improvement over time
 
 ## Best Practices
 
 ### Configuration Strategy
-
-1. **Start Simple**: Begin with basic test cases and rules
-2. **Iterate Gradually**: Add complexity as you understand your needs
-3. **Document Everything**: Keep clear records of your configuration
-4. **Regular Reviews**: Periodically assess and update your setup
+- **Start Simple**: Begin with basic test cases and rules
+- **Iterate Gradually**: Add complexity as you understand your needs
+- **Document Everything**: Keep clear records of your configuration
+- **Regular Reviews**: Periodically assess and update your setup
 
 ### Testing Workflow
-
-1. **Configure**: Set up test cases and rules in the webapp
+1. **Configure**: Set up test cases, rules, and knowledge base in the webapp
 2. **Develop**: Build and test your agent with the SDK
 3. **Run**: Execute simulations using webapp templates
 4. **Analyze**: Review results and identify improvements
 5. **Iterate**: Refine your agent and configuration
 
+
 ## Troubleshooting
 
 ### Common Issues
-
-**Template Not Working**: Ensure the template is starred and active
-**Rules Not Applied**: Check that rule sets are properly configured
-**Results Missing**: Verify simulations completed successfully
-**Export Errors**: Check data format and permissions
+- **Template Not Working**: Ensure the template is starred and active
+- **Rules Not Applied**: Check that rule sets are properly configured
+- **Results Missing**: Verify simulations completed successfully
+- **Export Errors**: Check data format and permissions
+- **Knowledge Base Issues**: Verify document upload and processing status
 
 ### Getting Help
-
 - **Documentation**: Review this guide and related tutorials
 - **Support**: Contact team@withjanus.com for assistance
-- **Community**: Check our support resources for solutions
-
-## Next Steps
-
-Now that you understand webapp setup, explore:
-
-<CardGroup cols={2}>
-<Card title="Agent Testing" icon="flask" href="/concepts/agent-testing">
-  Learn how to create and run basic agent tests
-</Card>
-
-<Card title="Tracing" icon="route" href="/concepts/tracing">
-  Understand how to trace function calls in your agent
-</Card>
-
-<Card title="Evaluation" icon="chart-line" href="/concepts/evaluation">
-  Deep dive into rule-based evaluation and scoring
-</Card>
-</CardGroup>
