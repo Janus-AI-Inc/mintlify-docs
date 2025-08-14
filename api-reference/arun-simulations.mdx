@@ -24,49 +24,7 @@ async def arun_simulations(
 ) -> List[dict]
 ```
 
-### Parameters
 
-<ParamField name="target_agent" type="Callable" required>
-Factory function that creates agent instances. Must return a callable that takes a string prompt and returns a string response (sync or async).
-</ParamField>
-
-<ParamField name="api_key" type="string" required>
-Your Janus API key for authentication. Contact [team@withjanus.com](mailto:team@withjanus.com) to get your API key.
-</ParamField>
-
-<ParamField name="num_simulations" type="integer" default="10">
-Number of conversation simulations to run. Recommended: 10-100 for comprehensive testing.
-</ParamField>
-
-<ParamField name="max_turns" type="integer" default="10">
-Maximum number of conversation turns per simulation. Recommended: 5-10 for most use cases.
-</ParamField>
-
-<ParamField name="base_url" type="string" default="https://api.withjanus.com">
-Base URL for the Janus API. Only change for custom deployments.
-</ParamField>
-
-<ParamField name="context" type="string" default="You are testing an AI agent in a conversational scenario.">
-Context provided to the conversation personas. Sets the scenario for testing.
-</ParamField>
-
-<ParamField name="goal" type="string" default="Evaluate the agent's performance through natural conversation.">
-Goal for the conversation personas. Defines what they're trying to achieve.
-</ParamField>
-
-<ParamField name="rules" type="List[string]" optional>
-List of rules to evaluate agent responses. Used for rule-based judgment scoring.
-</ParamField>
-
-<ParamField name="persona_kwargs" type="Dict[string, string]" optional>
-Additional keyword arguments passed to conversation personas. Allows customization of persona behavior.
-</ParamField>
-
-### Returns
-
-<ResponseField name="results" type="List[dict]" required>
-List of simulation results, one for each conversation simulation.
-</ResponseField>
 
 ### Basic Usage
 
