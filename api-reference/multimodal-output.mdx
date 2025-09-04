@@ -1,0 +1,69 @@
+---
+title: "MultimodalOutput"
+description: "Return structured data, files, and metadata from agents"
+---
+
+## MultimodalOutput
+
+The `MultimodalOutput` class allows agents to return structured data, files, and metadata instead of just text. This enables testing of complex workflows that produce rich outputs.
+
+### Basic Usage
+
+```python
+from janus_sdk import MultimodalOutput, FileAttachment
+
+# Return structured data from your agent
+async def my_agent(prompt: str) -> MultimodalOutput:
+    return MultimodalOutput(
+        text="Workflow completed successfully",
+        json_data={
+            "case_id": "CASE-123",
+            "status": "completed",
+            "execution_time": 2.5
+        },
+        files=[
+            FileAttachment(
+                name="report.pdf",
+                content=pdf_bytes,
+                mime_type="application/pdf",
+                size=len(pdf_bytes)
+            )
+        ],
+        metadata={
+            "api_calls": 8,
+            "memory_usage": "150MB"
+        }
+    )
+```
+
+### Use with run_simulations
+
+```python
+from janus_sdk import run_simulations, MultimodalOutput
+
+class MyMultimodalAgent:
+    async def chat(self, prompt: str) -> MultimodalOutput:
+        return MultimodalOutput(
+            text="Response summary",
+            json_data={"key": "value"},
+            metadata={"execution_time": 1.0}
+        )
+
+# Use with run_simulations
+results = await run_simulations(
+    num_simulations=10,
+    max_turns=1,
+    target_agent=lambda: MyMultimodalAgent().chat,
+    api_key="your_api_key"
+)
+```
+
+### Related Functions
+
+<Card title="run_simulations" icon="play" href="/api-reference/run-simulations">
+  Run simulations with multimodal agents
+</Card>
+
+<Card title="webhook-trigger" icon="webhook" href="/api-reference/webhook-trigger">
+  Create webhook agents that return multimodal data
+</Card>

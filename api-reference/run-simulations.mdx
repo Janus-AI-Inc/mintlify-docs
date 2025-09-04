@@ -12,7 +12,7 @@ Run multiple AI agent simulations to test and evaluate your agent's performance 
 ```python
 def run_simulations(
     *,
-    target_agent: Callable[[], Callable[[str], Awaitable[str] | str]],
+    target_agent: Union[MultimodalAgentFactory, Callable[[], Callable[[str], Awaitable[str] | str]]],
     api_key: str,
     num_simulations: int,
     max_turns: int,
@@ -171,9 +171,36 @@ asyncio.run(main())
 Webhook simulation allows you to test entire workflows end-to-end by triggering them via HTTP webhooks, then monitoring their execution and results.
 </Info>
 
+### Multimodal Output Support
+
+The SDK now supports multimodal outputs, allowing agents to return structured data, files, and metadata:
+
+```python
+from janus_sdk import run_simulations, MultimodalOutput, FileAttachment
+
+class MyMultimodalAgent:
+    async def chat(self, prompt: str) -> MultimodalOutput:
+        return MultimodalOutput(
+            text="Workflow completed successfully",
+            json_data={"case_id": "CASE-123", "status": "completed"},
+            files=[FileAttachment(name="report.pdf", content=pdf_bytes, mime_type="application/pdf", size=len(pdf_bytes))],
+            metadata={"execution_time": 2.5}
+        )
+
+# Use with run_simulations
+results = await run_simulations(
+    num_simulations=10,
+    max_turns=1,
+    target_agent=lambda: MyMultimodalAgent().chat,
+    api_key="your_api_key"
+)
+```
+
+
+
 ### Related Functions
 
-<CardGroup cols={3}>
+<CardGroup cols={4}>
 <Card title="arun_simulations" icon="code" href="/api-reference/arun-simulations">
   Async version of run_simulations for advanced use cases
 </Card>
@@ -184,5 +211,9 @@ Webhook simulation allows you to test entire workflows end-to-end by triggering 
 
 <Card title="webhook-trigger" icon="webhook" href="/api-reference/webhook-trigger">
   Create webhook target agents for external workflow testing
+</Card>
+
+<Card title="multimodal-output" icon="layers" href="/api-reference/multimodal-output">
+  Handle structured data, files, and metadata in agent responses
 </Card>
 </CardGroup> 

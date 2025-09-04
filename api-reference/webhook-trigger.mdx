@@ -15,7 +15,7 @@ async def create_webhook_target_agent(
     api_key: str, 
     workflow_id: str, 
     payload: dict
-) -> Callable[[int], Awaitable[str]]
+) -> Callable[[int], Awaitable[MultimodalOutput]]
 ```
 
 ### Usage with run_simulations
@@ -37,6 +37,34 @@ async def main():
     results = await run_simulations(
         num_simulations=5,
         max_turns=1,  # Single webhook trigger = 1 turn
+        target_agent=target_agent,
+        api_key="your_janus_api_key"
+    )
+
+asyncio.run(main())
+```
+
+### Multimodal Output Support
+
+The webhook target agent now returns `MultimodalOutput` with structured data from your workflows:
+
+```python
+import asyncio
+from janus_sdk import run_simulations, create_webhook_target_agent
+
+async def main():
+    # Create webhook target agent
+    target_agent = await create_webhook_target_agent(
+        n8n_base_url="https://your-n8n-instance.com",
+        api_key="your_api_key",
+        workflow_id="your_workflow_id",
+        payload={"case_id": "CASE-123", "priority": "High"}
+    )
+    
+    # Run simulations - agent returns MultimodalOutput
+    results = await run_simulations(
+        num_simulations=5,
+        max_turns=1,
         target_agent=target_agent,
         api_key="your_janus_api_key"
     )
@@ -67,7 +95,7 @@ asyncio.run(main())
 Returns a target agent function that can be used directly with `run_simulations`. The function:
 - Triggers the specified workflow via webhook
 - Waits for workflow completion
-- Returns the final result as a string for evaluation
+- Returns the final result as a `MultimodalOutput` with structured data, files, and metadata
 
 ### Related Functions
 

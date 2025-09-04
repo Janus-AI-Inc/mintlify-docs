@@ -65,7 +65,8 @@
           {
             "group": "Classes",
             "pages": [
-              "api-reference/tool-event-handle"
+              "api-reference/tool-event-handle",
+              "api-reference/multimodal-output"
             ]
           }
         ]
