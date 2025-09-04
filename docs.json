@@ -57,6 +57,12 @@
             ]
           },
           {
+            "group": "Webhook simulation",
+            "pages": [
+              "api-reference/webhook-trigger"
+            ]
+          },
+          {
             "group": "Classes",
             "pages": [
               "api-reference/tool-event-handle"
