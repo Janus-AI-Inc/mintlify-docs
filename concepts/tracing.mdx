@@ -3,9 +3,14 @@ title: "Function Tracing"
 description: "Learn how to trace function calls and tool usage in your AI agents"
 ---
 
-## Function Call Tracing
+Track every function your agent executes - automatically or manually - to understand failures, optimize performance, and export data for analysis.
 
-Janus Python SDK provides comprehensive tracing capabilities to track function calls, tool usage, sub agent interactions, and performance metrics in your AI agents. This helps you understand how your agent works internally, how it coordinates with other agents, and identify bottlenecks or issues.
+**Three ways to trace:**
+1. **`@track` decorator** - Automatic tracing for your functions
+2. **Manual tracing** - For external APIs and tools
+3. **LangChain callback** - For LangChain agents
+
+Choose the method that fits your setup. All traces appear in the dashboard with full context.
 
 ## Tracing Methods
 
@@ -100,38 +105,35 @@ agent_executor = AgentExecutor(
     callbacks=[JanusLangChainCallback()]
 )
 ```
-
 ## What Gets Traced
 
-### **Function Information**
-- Function name and signature
-- Input parameters and their values
-- Return values and outputs
-- Execution time and duration
+### Function Execution
+- Function name, signature, and parameters
+- Input values and return outputs
+- Execution time and performance metrics
 - Error messages and stack traces
 
-### **Context Information**
-- Conversation ID and simulation context
-- Parent function calls (call stack)
-- Timestamps and sequence information
-- Performance metrics
-
-### **Tool Usage**
-- Tool name and input parameters
-- Tool output and results
+### Tool & API Calls
+- Tool/API name and endpoints
+- Request parameters and response data
 - Success/failure status
-- Duration and performance data
+- Duration and timing information
 
-### **Sub Agent Interactions**
-- Sub agent calls and delegation patterns
-- Agent-to-agent communication flows
-- Hierarchical agent structures and relationships
-- Cross-agent context sharing and coordination
+### Agent Coordination
+- Sub-agent calls and delegation patterns
+- Agent-to-agent communication
+- Hierarchical structures
+- Context sharing across agents
 
-### **Rule Validation**
-- Rule compliance status for each function/tool call
-- Violation details with rule descriptions
-- Rule validation timing and performance
+### Validation & Compliance
+- Rule compliance status per function
+- Violation details with descriptions
+- Custom validation results
+- Performance against thresholds
+
+<Info>
+**All trace data** is automatically sent to the Janus dashboard and can be exported for analysis, debugging, or fine-tuning.
+</Info>
 
 ## Tracing in Practice
 
@@ -268,13 +270,15 @@ Rules are simple strings that describe the expected behavior:
 Traces are automatically recorded, evaluated, and sent to the Janus platform when simulations are run. You can view them in the dashboard:
 
 1. **Go to Results** at [app.withjanus.com](https://app.withjanus.com)
-2. **Select a conversation** to view detailed results
+2. **Select a simulation** to view detailed results
 3. **Click on the Traces tab** to see:
    - Function call hierarchy
    - Input/output values
    - Execution timing
    - Error details
    - Performance metrics
+
+
 
 ### **Trace Information Available**
 - **Function calls**: Complete call stack with parameters

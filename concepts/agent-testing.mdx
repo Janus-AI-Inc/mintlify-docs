@@ -3,10 +3,6 @@ title: "Agent Testing"
 description: "Learn how Janus automatically tests your AI agents through conversation simulations"
 ---
 
-## Automated Agent Testing
-
-Janus Python SDK provides comprehensive automated testing for AI agents through conversation simulations. Instead of manually creating test scenarios, Janus automatically generates diverse conversation patterns to stress-test your agent.
-
 ## How It Works
 
 ### 1. **Conversation Simulation**
@@ -22,11 +18,14 @@ await janus.run_simulations(
 ```
 
 ### 2. **Diverse Personas**
-Each simulation uses different personas with varying characteristics based on the template you define in the Janus webapp:
+Janus generates diverse user personas automatically based on your webapp template:
+
 - **Demographics**: Age, income, gender, location
 - **Behavioral traits**: Conversation intensity, patience, complaint propensity
 - **Technical expertise**: Beginner to expert levels
 - **Communication styles**: Formal, casual, urgent, relaxed
+
+**Why this matters:** Real users aren't uniform. Testing with diverse personas catches edge cases that uniform test sets miss.
 
 <Card
   title="Webapp Setup Guide"
@@ -76,12 +75,12 @@ results = await janus.run_simulations(
     api_key="your_janus_api_key"
 )
 ```
-
+  
 ### External Workflow Testing
-Test entire workflows by simulating webhook triggers to external systems like N8N:
+Test event-driven workflows, API integrations, and end-to-end business processes by simulating webhook triggers to external systems like N8N, Zapier, or custom APIs.
 
 ```python
-# Test external workflows via webhook simulation
+# Test entire workflows by simulating webhook triggers:
 target_agent = await create_webhook_target_agent(
     n8n_base_url="https://your-n8n-instance.com",
     api_key="your_api_key",
@@ -97,9 +96,7 @@ results = await janus.run_simulations(
 )
 ```
 
-<Info>
-Webhook simulation is ideal for testing event-driven workflows, API integrations, and end-to-end business processes that are triggered by external systems.
-</Info>
+
 
 ## Testing Workflow
 
@@ -123,7 +120,7 @@ class MyAgent:
 ### Step 2: Configure Your Testing Environment (Webapp)
 Before running simulations, you need to set up your testing environment in the Janus webapp:
 
-1. **Create Test Cases**: Define specific queries and scenarios to test
+1. **Create Test Cases**: Provide 5-10 examples of real test sets/queries. This will serve as the basis for creating the simulation runs.
 2. **Set Up Rule Sets**: Configure evaluation criteria and compliance rules
 3. **Create Simulation Templates**: Design personas and conversation parameters
 
@@ -187,6 +184,82 @@ View comprehensive results in the Janus dashboard at [app.withjanus.com/dashboar
 <Warning>
 Running many simulations can be resource-intensive. Monitor your API usage and system resources.
 </Warning>
+
+## Common Use Cases
+
+### 1. **Replace Manual Test Case Creation**
+
+**Traditional approach:** PMs spend 2-3 weeks writing test cases  
+**Janus approach:** Upload 5 seed examples, auto-generate 10,000 realistic scenarios in hours
+
+**How it works:**
+- Provide 3-5 real conversation examples or test cases
+- Janus automatically generates thousands of variations (different personas, intents, edge cases)
+- Covers 80%+ of realistic user behaviors without manual annotation
+
+**Result:** Comprehensive test coverage in hours instead of weeks
+
+---
+
+### 2. **Generate Fine-Tuning Data**
+
+**Problem:** Need domain-specific training data for model improvement  
+**Solution:** Every simulation run exports as RLHF-ready training data
+
+**What you get:**
+- Full conversation trajectories with reward signals
+- Edge case examples for model improvement
+- Ground truth labels for good/bad responses
+- Domain-specific fine-tuning datasets
+
+**Result:** Thousands of training examples without manual labeling. Your eval infrastructure doubles as a data generation engine.
+
+---
+
+### 3. **Continuous Regression Testing**
+
+**Problem:** Agent improvements might break existing functionality  
+**Solution:** Run simulations after every code change to catch regressions
+
+**How it works:**
+- Run 100+ simulations after each deployment
+- Compare pass rates to baseline metrics
+- Catch breaking changes before they reach production
+- Integrate with CI/CD pipelines for automated testing
+
+**Result:** Ship with confidence, knowing new changes don't break existing behavior
+
+---
+
+### 4. **Measure Qualitative Improvements**
+
+**Problem:** Can't measure subjective KPIs like politeness, helpfulness, or satisfaction  
+**Solution:** Calibrated judges that score qualitative metrics at scale
+
+**What you can measure:**
+- Empathy and professionalism in responses
+- User satisfaction and resolution quality
+- Appropriate handling of frustration or edge cases
+- Brand voice and tone consistency
+
+**Result:** Optimize for metrics that actually matter to users, not just task accuracy
+
+---
+
+### 5. **Test Event-Driven Workflows & API Integrations**
+
+**Use case:** Validate webhook endpoints, N8N workflows, Zapier automations, or custom APIs  
+**Solution:** Simulate webhook triggers and test end-to-end business processes
+
+**What you can test:**
+- Event-driven automation workflows (N8N, Zapier, Make)
+- Third-party API integrations
+- Webhook endpoint validation
+- End-to-end business process flows
+
+**Result:** Ensure external integrations work correctly before production deployment
+
+
 
 ## Example: Customer Service Testing
 
