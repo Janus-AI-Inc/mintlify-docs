@@ -5,7 +5,7 @@ description: "Get up and running with Janus Python SDK in under 5 minutes"
 
 ## Get Started in 5 Minutes
 
-Learn how to test your first AI agent with Janus Python SDK. This guide will walk you through creating a simple agent and running automated simulations.
+Learn how to test your first AI agent with Janus Python SDK. This guide will walk you through creating a simple agent and running automated evaluations.
 
 
 
@@ -90,7 +90,7 @@ class MyAgent:                    # ② exactly one async chat method
         return response.choices[0].message.content
 
 async def main():
-    # Run simulations with your agent
+    # Run evaluations on your agent
     results = await run_simulations(
         num_simulations=3,  # Start with a small number for testing
         max_turns=3,        # Keep conversations short for quick testing
@@ -107,32 +107,32 @@ if __name__ == "__main__":
 ```
 
 <Info>
-**Tip:** Anything wrapped with `@track` is automatically logged (inputs, outputs, timing) in every simulation turn.
+**Tip:** Anything wrapped with `@track` is automatically logged (inputs, outputs, timing) in every evaluation turn.
 </Info>
 
 ## Step 4: Configure Your Testing Environment (Webapp)
 
-Before running simulations, you need to set up your testing environment in the Janus webapp, offering:
-- Custom test cases and scenarios
+Before running evaluations, you need to set up your testing environment in the Janus webapp, offering:
+- Custom test cases and tasks
 - Domain-specific rules and compliance checks
 - User personas and demographics
 
 ### Create Test Cases
 1. Go to the **Test & Rules → Test Cases** page to create and manage your test queries
 2. Add specific queries you want to test against, along with context and goals for each test case
-3. These will be used in your simulations
+3. These will be used in your evaluation runs
 
 ### Define Rule Sets
-1. Go to the **Test & Rules → Rule Sets** tab to create and manage rules
+1. Go to the **Test & Rules → Rule Sets** section to create and manage rules
 2. Define compliance rules, response quality checks, and behavioral constraints that you want to test your agent's responses against
 
-### Create Simulation Templates
+### Create Eval Templates
 1. Go to the **Templates page** and create custom configurations for your agents
 2. You can only use one template at a time
 3. Star a template when you're ready to test against it
 
 <Info>
-**Tip:** The SDK and webapp work hand-in-hand. Use the webapp to configure simulations and the SDK to run them programmatically.
+**Tip:** The SDK and webapp work hand-in-hand. Use the webapp to configure evaluations and the SDK to run them programmatically.
 </Info>
 
 <Card
@@ -155,7 +155,7 @@ python my_agent.py
 
 ## Step 6: Understand the Results
 
-Janus will provide detailed results for each simulation, including:
+Janus will provide detailed results for each test, including:
 
 - **Conversation logs** - Full conversation history
 - **Performance metrics** - Response times, token usage
@@ -217,7 +217,7 @@ Now that you've run your first test, explore these advanced features:
 <Accordion title="Performance Tips">
   - Start with `num_simulations=3` for quick testing
   - Use `max_turns=3` for faster results
-  - Increase simulation count gradually as you optimize
+  - Increase test count gradually as you optimize
 </Accordion>
 </AccordionGroup>
 

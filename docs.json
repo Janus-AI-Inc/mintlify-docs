@@ -57,7 +57,7 @@
             ]
           },
           {
-            "group": "Webhook simulation",
+            "group": "Webhook testing",
             "pages": [
               "api-reference/webhook-trigger"
             ]

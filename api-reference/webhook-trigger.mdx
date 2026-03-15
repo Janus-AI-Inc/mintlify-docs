@@ -33,7 +33,7 @@ async def main():
         payload={"case_id": "CASE-123", "priority": "High"}
     )
     
-    # Run simulations with webhook trigger
+    # Run evaluations with webhook trigger
     results = await run_simulations(
         num_simulations=5,
         max_turns=1,  # Single webhook trigger = 1 turn
@@ -61,7 +61,7 @@ async def main():
         payload={"case_id": "CASE-123", "priority": "High"}
     )
     
-    # Run simulations - agent returns MultimodalOutput
+    # Run evaluations - agent returns MultimodalOutput
     results = await run_simulations(
         num_simulations=5,
         max_turns=1,
@@ -100,5 +100,5 @@ Returns a target agent function that can be used directly with `run_simulations`
 ### Related Functions
 
 <Card title="run_simulations" icon="play" href="/api-reference/run-simulations">
-  Run multiple simulations with webhook triggers
+  Run evaluations with webhook triggers
 </Card>

@@ -14,7 +14,7 @@ The Janus platform has two interfaces that work together:
 <Card title="Python SDK" icon="code">
 **For engineers who want programmatic control**
 
-✅ Run simulations from CI/CD  
+✅ Run evaluations from CI/CD  
 ✅ Integrate with existing architecture  
 ✅ Trace code within your IDE  
  
@@ -26,7 +26,7 @@ The Janus platform has two interfaces that work together:
 **For everyone who wants visual configuration**
 
 ✅ Create test sets and judging criteria  
-✅ Configure simulation environments  
+✅ Configure evaluation environments  
 ✅ View results and insights
 
 [Open Webapp →](https://app.withjanus.com)
@@ -39,15 +39,15 @@ The Janus platform has two interfaces that work together:
 
 The webapp provides three main areas for configuration:
 - **Test & Rules**: Define test cases, evaluation rules, and knowledge base
-- **Templates**: Configure simulation templates and run simulations  
+- **Templates**: Configure eval templates and run evaluations  
 - **Results**: Analyze performance and export data
 
 ## Test & Rules Configuration
 
 ### Test Cases
-Navigate to **Test & Rules → Test Cases** to create and manage your test queries:
+Navigate to the **Test & Rules** page. The **Test Cases** section lets you create and manage your test queries:
 
-- **Create Test Cases**: Add specific queries (seed examples for simulations)
+- **Create Test Cases**: Add specific queries (seed examples for evaluation runs)
 - **Set Context**: Provide background information and goals for each test case
 - **Define Expectations**: Specify what constitutes a successful response
 - **Organize by Category**: Group related test cases for better organization
@@ -61,7 +61,7 @@ Category: Healthcare, Medication Safety
 ```
 
 ### Rule Sets
-Go to **Test & Rules → Rule Sets** to define evaluation criteria:
+The **Rule Sets** section on the same page lets you define evaluation criteria:
 
 - **Compliance Rules**: Ensure responses follow company policies
 - **Quality Checks**: Validate response accuracy and completeness
@@ -75,7 +75,7 @@ Go to **Test & Rules → Rule Sets** to define evaluation criteria:
 - **Tone**: Professional, helpful, appropriate
 
 ### Knowledge Base
-Access **Test & Rules → Knowledge Base** to upload documents for hallucination detection:
+The **Knowledge Base** section on the same page lets you upload documents for hallucination detection:
 
 - **Document Upload**: Support for PDF, DOCX, TXT, and other formats
 - **RAG Hallucination Detection**: Automatically detect when agents make false claims
@@ -89,14 +89,14 @@ Access **Test & Rules → Knowledge Base** to upload documents for hallucination
 - Markdown files (MD)
 - CSV files
 
-## Simulation Configuration
+## Run Configuration
 
 ### Templates
-The **Templates** page is where you configure simulation parameters:
+The **Templates** page is where you configure evaluation parameters:
 
-- **Create Templates**: Set up different simulation configurations
+- **Create Templates**: Set up different evaluation configurations
 - **Configure Personas**: Define user characteristics and behaviors
-- **Set Parameters**: Adjust simulation length, complexity, and goals
+- **Set Parameters**: Adjust run length, complexity, and goals
 - **Star Templates**: Mark templates as active for testing
 
 **Template Configuration Options:**
@@ -110,7 +110,7 @@ The **Templates** page is where you configure simulation parameters:
 - **Behavioral**: Patience level, complaint propensity
 - **Occupation**: Custom occupation tags
 - **Miscellaneous Notes**: Additional context or constraints
-- **CSV Data Integration**: Upload user data for personalized simulations
+- **CSV Data Integration**: Upload user data for personalized tests
 - **Assignment Strategies**: Sequential, random, or round-robin user assignment
 - **RAG Hallucination Judge**: Enable AI-powered factual accuracy verification
 
@@ -119,7 +119,7 @@ The **Templates** page is where you configure simulation parameters:
 - Each row becomes a unique synthetic user
 - Supports custom fields for personalization
 
-## Running Simulations
+## Running Evaluations
 
 ### From the SDK
 Use the webapp configuration with your SDK code:
@@ -141,32 +141,31 @@ await run_simulations(
 ## Results and Analysis
 
 ### Viewing Results
-Navigate to **Results** to analyze your simulation outcomes:
+Navigate to **Results** to analyze your evaluation results:
 
-- **Conversation Logs**: Full transcript of each simulation
+- **Full Transcript**: Full transcript and trace data for each test
 - **Performance Metrics**: Response times, token usage, success rates
 - **Rule Violations**: Instances where rules were broken
 - **Tool Usage**: Detailed tracing of function calls and API usage
 - **RAG Hallucinations**: Detected factual inaccuracies against knowledge base
 
 **Available Analysis Tabs:**
-- **Transcript**: Full conversation flow with metrics and function calls
+- **Transcript**: Full execution flow with metrics and function calls
 - **Rules**: Individual rule violations with context
 - **Overall**: Overall rule compliance assessment
 - **Functions**: Detailed function call traces and performance
 - **Hallucinations**: RAG accuracy verification results
-- **Investigation**: Janus's intelligent third-party judging system that autonomously analyzes every simulation to identify potential issues, anomalies, and areas that warrant your attention - think of it as your AI-powered quality assurance team that never sleeps
-- **Eval**: Evaluation comparisons (when available)
-- **Identity**: User persona and backstory details used in simulation
+- **Investigation**: Janus's intelligent judging system that autonomously analyzes every test to identify potential issues and areas that warrant your attention (shown when data is available)
+- **Eval**: Evaluation comparisons (shown when data is available)
 
 ## Exporting Data
 
-Export simulation results for analysis, fine-tuning, or reporting.
+Export evaluation results for analysis, fine-tuning, or reporting.
 
 ### What You Can Export
 
-**1. Evaluation Results (JSON)**:
-- All conversations and turns
+**1. Evaluation Data (JSONL)**:
+- All tests with traces and turns
 - Rule violations with context
 - Hallucination detections
 - Performance metrics
@@ -174,67 +173,42 @@ Export simulation results for analysis, fine-tuning, or reporting.
 
 **Use for:**
 - GPT clustering analysis (identify failure patterns)
+- Fine-tuning and RLHF training data
 - Custom analysis and monitoring
 - Integration with existing tools
 
 **How to export:**
 1. Go to Results page
-2. Click "Export" → "JSON"
+2. Click "Export" to download as JSONL
 
 ---
 
-**2. Training Data (RLHF Format)**: 
-Structured data for model fine-tuning
-- Full conversation trajectories
-- Reward signals (rule compliance scores)
-- Positive/negative examples
-- Ground truth labels
-
-**Use for:**
-- Fine-tuning your agent
-- Training custom models
-- RLHF post-training
-
----
-
-**3. Compliance Reports**: 
-Structured data for reporting
+**2. Performance Reports**:
+AI-generated reports via the Insights page
 - Rule violation summary
-- Pass/fail rates
+- Issue clustering and recommendations
 - Performance metrics
-- Audit trail
 
-**Use for:**
-- Compliance documentation
-- Stakeholder reporting
-- Performance dashboards
-
-**How to export:**
+**How to generate:**
 1. Go to Insights page
-2. Select generate report and specified simulation 
-3. Click 'Run'
----
+2. Select an evaluation run
+3. Click 'Run' to generate a report
 
+---
 
 ### Common Export Workflows
 
 **Workflow 1: GPT Clustering**
-1. Export failed simulations as JSON
+1. Export failed tests as JSONL
 2. Feed to GPT: "What patterns do you see?"
 3. Create new rules based on patterns
-4. Re-run simulations with new rules
+4. Re-run evaluations with new rules
 
 **Workflow 2: Model Fine-Tuning**
-1. Export successful simulations as RLHF
-2. Use as training data
+1. Export evaluation data as JSONL
+2. Transform into your training format
 3. Fine-tune model on domain-specific examples
-4. Test improved model with new simulations
-
-**Workflow 3: Compliance Reporting**
-1. Export all simulations as CSV
-2. Generate monthly compliance report
-3. Track improvement over time
-4. Share with stakeholders
+4. Test improved model with new evaluation runs
 
 
 ## Insights and Reporting
@@ -260,7 +234,7 @@ The **Insights** page provides:
 ### Testing Workflow
 1. **Configure**: Set up test cases, rules, and knowledge base in the webapp
 2. **Develop**: Build and test your agent with the SDK
-3. **Run**: Execute simulations using webapp templates
+3. **Run**: Execute evaluations using webapp templates
 4. **Analyze**: Review results and identify improvements
 5. **Iterate**: Refine your agent and configuration
 

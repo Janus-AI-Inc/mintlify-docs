@@ -1,22 +1,21 @@
 ---
-title: "Janus Python SDK"
-description: "Automatically evaluate your AI systems at scale with simulation"
+title: "Janus Docs"
+description: "Automated evaluation infrastructure for AI agents"
 ---
 
 ## Evaluate AI Agents in Days, not Months
 
-The end-to-end simulation engine that auto-generates comprehensive benchmarks 
-so you can ship production-ready agents 10x faster.
+Automated evaluation infrastructure for AI agents. Generate thousands of tests, run specialized judges, know exactly where your agents break, improve, and retest.
 
 What you get:
 
-- Auto-generate 10,000+ scenarios in hours (zero annotation)
+- Auto-generate 10,000+ tasks for your agent in hours (zero annotation)
 
-- Comprehensive distribution coverage (95%+ of realistic cases)
+- Evaluate chat agents, voice agents, workflows, and multimodal systems with specialized judges
+
+- Export evaluation data in JSONL for fine-tuning, RLHF, or custom analysis
 
 - One platform for technical and nontechnical teams (SDK + UI)
-
-- Export RLHF-ready training data from every test run
 
 <Card
   title="Quick Start"
@@ -31,42 +30,42 @@ What you get:
 
 <Columns cols={2}>
   <Card
-    title="Simulation Environments"
+    title="Automated Eval Runs"
     icon="flask"
     href="/concepts/agent-testing"
   >
-    Evaluate your agents with 10,000+ scenarios from 10-15 seed examples, each simulating different personalities, intents, and edge cases.
+    Evaluate your agents with 10,000+ tests from 10-15 seed examples, each testing different personalities, intents, and edge cases.
   </Card>
   <Card
     title="Customized Judges & Metrics"
     icon="chart-line"
     href="/concepts/evaluation"
   >
-    Define any metric that matters - from hard rules (compliance, accuracy) 
-  to qualitative KPIs (politeness, satisfaction) - with LLM-as-judge 
+    Define any metric that matters, from hard rules (compliance, accuracy)
+  to qualitative KPIs (politeness, satisfaction), with LLM-as-judge
   scoring calibrated to your domain.
   </Card>
   <Card
-    title="Data Export & Fine-Tuning"
+    title="Function Tracing & Observability"
     icon="route"
-    href="/concepts/webapp-setup"
+    href="/concepts/tracing"
   >
-    Export every simulation as RLHF-ready training data for fine-tuning. Includes full trajectories, reward signals, and edge cases - ready for GPT clustering or model improvement.
+    Trace every function call, API request, and tool invocation your agent makes.
   </Card>
   <Card
     title="Hallucination Detection & Knowledge Base Cross-Checking"
     icon="shield-check"
     href="/concepts/evaluation"
   >
-    Upload your docs, PDFs, or KBs - Janus validates agent responses against ground truth.
+    Upload your docs, PDFs, or KBs. Janus validates agent responses against ground truth.
   </Card>
 
 </Columns>
 
 ## Key Features
 
-### **Automated Simulations**
-Run multiple conversation simulations with different personas to test your AI agent's behavior across various scenarios.
+### **Automated Evaluations**
+Run automated evaluation runs with different personas to test your AI agent across various tasks.
 
 ```python
 await janus.run_simulations(
@@ -102,19 +101,6 @@ rules = [
     "The agent should cite sources when making claims",
     "The agent should stay within the conversation context"
 ]
-```
-
-### **Framework Integration**
-Works seamlessly with popular frameworks like LangChain through custom callbacks.
-
-```python
-from janus_sdk import JanusLangChainCallback
-
-agent_executor = AgentExecutor(
-    agent=agent,
-    tools=[weather_tool],
-    callbacks=[JanusLangChainCallback()]
-)
 ```
 
 ## Use Cases
@@ -159,7 +145,7 @@ Test legal AI assistants for accuracy, compliance with legal standards, and appr
 </Step>
 
 <Step title="Get an API Key">
-  Contact the Janus team at [team@withjanus.com](mailto:team@withjanus.com) to get your API key and login credentials for accessing the Janus platform.
+  Contact the Janus team at [team@withjanus.com](mailto:team@withjanus.com) to get your API key and login credentials. We'll set up your eval pipeline with you and get you running tests in days.
   
   <Warning>
   Keep your API key secure and never commit it to version control.

@@ -1,17 +1,17 @@
 ---
 title: "Agent Testing"
-description: "Learn how Janus automatically tests your AI agents through conversation simulations"
+description: "Learn how Janus automates evaluation of your AI agents"
 ---
 
 ## How It Works
 
-### 1. **Conversation Simulation**
-Janus creates realistic conversation scenarios by simulating different user personas interacting with your agent:
+### 1. **How Evaluations Work**
+Janus synthetically generates realistic tasks from your company data, context, and seed examples. Whether your agent handles chat, voice, workflows, or multimodal interactions, Janus creates diverse test scenarios tailored to your domain:
 
 ```python
 await janus.run_simulations(
-    num_simulations=10,  # Run 10 different conversations
-    max_turns=5,         # Each conversation has up to 5 turns
+    num_simulations=10,  # Run 10 tests
+    max_turns=5,         # Each test has up to 5 turns
     target_agent=lambda: MyAgent().chat,
     api_key="your_janus_api_key"
 )
@@ -32,7 +32,7 @@ Janus generates diverse user personas automatically based on your webapp templat
   icon="book"
   href="/concepts/webapp-setup"
 >
-  Learn how to configure simulation templates and personas in the webapp
+  Learn how to configure eval templates and personas in the webapp
 </Card>
 
 ### 3. **Systematic Testing**
@@ -67,7 +67,7 @@ class MyAgent:
         # Your agent logic here
         return "Hello! I'm your AI assistant."
 
-# Test through conversation simulation
+# Test through automated evaluation
 results = await janus.run_simulations(
     num_simulations=10,
     max_turns=5,
@@ -118,18 +118,18 @@ class MyAgent:
 ```
 
 ### Step 2: Configure Your Testing Environment (Webapp)
-Before running simulations, you need to set up your testing environment in the Janus webapp:
+Before running evaluations, you need to set up your testing environment in the Janus webapp:
 
-1. **Create Test Cases**: Provide 5-10 examples of real test sets/queries. This will serve as the basis for creating the simulation runs.
+1. **Create Test Cases**: Provide 5-10 examples of real test sets/queries. This will serve as the basis for creating evaluation runs.
 2. **Set Up Rule Sets**: Configure evaluation criteria and compliance rules
-3. **Create Simulation Templates**: Design personas and conversation parameters
+3. **Create Eval Templates**: Design personas and conversation parameters
 
 <Card
   title="Webapp Setup Guide"
   icon="settings"
   href="/concepts/webapp-setup"
 >
-  Learn how to configure test cases, rules, and simulation templates
+  Learn how to configure test cases, rules, and eval templates
 </Card>
 
 ### Step 3: Configure Test Parameters
@@ -169,20 +169,20 @@ View comprehensive results in the Janus dashboard at [app.withjanus.com/dashboar
   icon="chart-line"
   href="https://app.withjanus.com/dashboard/results"
 >
-  Check your simulation results in the Janus dashboard
+  Check your evaluation results in the Janus dashboard
 </Card>
 
 ## Best Practices
 
 <Tip>
-- Start with 10-20 simulations for initial testing
-- Increase simulation count for comprehensive evaluation
+- Start with 10-20 tests for initial testing
+- Increase test count for comprehensive evaluation
 - Use custom context to match your specific use case
 - Monitor results in the Janus dashboard for detailed insights
 </Tip>
 
 <Warning>
-Running many simulations can be resource-intensive. Monitor your API usage and system resources.
+Running many tests can be resource-intensive. Monitor your API usage and system resources.
 </Warning>
 
 ## Common Use Cases
@@ -195,22 +195,19 @@ Running many simulations can be resource-intensive. Monitor your API usage and s
 **How it works:**
 - Provide 3-5 real conversation examples or test cases
 - Janus automatically generates thousands of variations (different personas, intents, edge cases)
-- Covers 80%+ of realistic user behaviors without manual annotation
-
 **Result:** Comprehensive test coverage in hours instead of weeks
 
 ---
 
 ### 2. **Generate Fine-Tuning Data**
 
-**Problem:** Need domain-specific training data for model improvement  
-**Solution:** Every simulation run exports as RLHF-ready training data
+**Problem:** Need domain-specific training data for model improvement
+**Solution:** Export evaluation data as JSONL and use it for fine-tuning, RLHF, or custom training pipelines
 
 **What you get:**
-- Full conversation trajectories with reward signals
+- Full conversation trajectories with rule compliance signals
 - Edge case examples for model improvement
-- Ground truth labels for good/bad responses
-- Domain-specific fine-tuning datasets
+- Domain-specific evaluation datasets in JSONL format
 
 **Result:** Thousands of training examples without manual labeling. Your eval infrastructure doubles as a data generation engine.
 
@@ -219,10 +216,10 @@ Running many simulations can be resource-intensive. Monitor your API usage and s
 ### 3. **Continuous Regression Testing**
 
 **Problem:** Agent improvements might break existing functionality  
-**Solution:** Run simulations after every code change to catch regressions
+**Solution:** Run evaluations after every code change to catch regressions
 
 **How it works:**
-- Run 100+ simulations after each deployment
+- Run 100+ tests after each deployment
 - Compare pass rates to baseline metrics
 - Catch breaking changes before they reach production
 - Integrate with CI/CD pipelines for automated testing

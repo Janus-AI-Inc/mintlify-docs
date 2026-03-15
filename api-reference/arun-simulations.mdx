@@ -1,11 +1,15 @@
 ---
 title: "arun_simulations"
-description: "Async implementation for running multiple AI agent simulations with full control over execution"
+description: "Async implementation for running automated AI agent evaluations with full control over execution"
 ---
 
 ## arun_simulations
 
-Async implementation for running multiple AI agent simulations. Provides the same functionality as `run_simulations()` but runs asynchronously for better performance in async applications.
+Async implementation for running automated AI agent evaluations. This is the underlying async function that `run_simulations()` wraps. Use `run_simulations()` for most cases; use `arun_simulations()` directly if you're already in an async context and want explicit control.
+
+<Warning>
+`arun_simulations` is not part of the public `__all__` export. Import it directly: `from janus_sdk.janus_sdk import arun_simulations`
+</Warning>
 
 ### Function Signature
 
@@ -74,9 +78,9 @@ results = await janus.arun_simulations(
 ### Performance Benefits
 
 <Tip>
-- Runs simulations concurrently for faster execution
+- Runs tests concurrently for faster execution
 - Automatically manages concurrency with configurable limits
-- Built-in progress tracking for long-running simulations
+- Built-in progress tracking for long-running evaluations
 - Memory efficient with batch processing
 </Tip>
 
@@ -86,15 +90,15 @@ The function handles various error scenarios:
 
 <AccordionGroup>
 <Accordion title="Network Errors">
-  If the Janus API is unavailable, simulations will fail gracefully with error details in the response.
+  If the Janus API is unavailable, tests will fail gracefully with error details in the response.
 </Accordion>
 
 <Accordion title="Agent Errors">
-  If your agent throws an exception, the simulation will be marked as failed with error information.
+  If your agent throws an exception, the test will be marked as failed with error information.
 </Accordion>
 
 <Accordion title="Timeout Errors">
-  If simulations take too long, they will be automatically terminated and marked as timeout.
+  If tests take too long, they will be automatically terminated and marked as timeout.
 </Accordion>
 </AccordionGroup>
 
