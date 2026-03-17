@@ -27,6 +27,7 @@
               "concepts/agent-testing",
               "concepts/tracing",
               "concepts/evaluation",
+              "concepts/kpi-analysis",
               "concepts/webapp-setup"
             ]
           },

@@ -1,0 +1,58 @@
+---
+title: "KPI Analysis & Clustering"
+description: "Automatically cluster test failures, identify root causes, and get actionable KPI suggestions"
+---
+
+## What It Does
+
+KPI Analysis groups your evaluation tests by similarity, identifies recurring failure patterns, and suggests concrete fixes. Instead of reviewing hundreds of tests individually, you get clustered failure archetypes with root cause analysis and actionable recommendations.
+
+**What you get for each cluster:**
+- **Failure Archetype**: A 2-5 word label describing the pattern (e.g., "Retrieval Miss", "Tool Selection Error", "Token Limit Exceeded")
+- **Root Cause**: 2-3 sentence explanation of the underlying issue
+- **KPI Suggestion**: A specific, actionable recommendation for what to change in your agent's pipeline, prompts, or tools
+
+## How It Works
+
+<Steps>
+<Step title="Select tests from Results">
+  Go to the **Results** page at [app.withjanus.com/dashboard/results](https://app.withjanus.com/dashboard/results). Select the tests you want to analyze, then click the **Analyze** button.
+</Step>
+
+<Step title="Automatic clustering">
+  Janus automatically summarizes each test, groups similar tests together, and analyzes each cluster to extract failure patterns and generate KPI suggestions.
+</Step>
+
+<Step title="Review clusters">
+  The Analyze page displays each cluster as a card showing the failure archetype, root cause, and member tests. Expand any cluster to see the individual tests and click through to view full details.
+</Step>
+
+<Step title="Generate a full report">
+  Click **Full Report** to view a comprehensive KPI Suggestion Report across all clusters, including failure archetypes, root causes, and actionable recommendations.
+</Step>
+</Steps>
+
+## Saving & Viewing Past Analyses
+
+You can save any cluster analysis with a custom name. Saved analyses are accessible from the archive on the Analyze page, where you can reload past results without re-running the analysis. All cluster details, including trace-level data, are fully preserved. You can also delete saved analyses from the archive.
+
+## Adding More Tests
+
+After an initial analysis, you can click **Add Traces** to include additional tests from your history.
+
+You can also click **Recluster** to re-run the analysis on the same set of tests.
+
+## Use Cases
+
+### Find Systematic Agent Failures
+Run 100+ tests, then cluster the results to discover that 30% of failures share the same root cause (e.g., the agent consistently fails to retrieve relevant documents for a specific query type).
+
+### Prioritize Fixes by Impact
+Each cluster shows how many tests share the same failure pattern. Fix the largest clusters first for maximum impact.
+
+### Track Improvement Over Time
+After making changes to your agent, re-run evaluations and cluster again. Compare the failure archetypes to verify that previously identified patterns are resolved.
+
+### Generate Stakeholder Reports
+Use the Full Report to share structured findings with your team, including specific failure categories, root causes, and recommended next steps.
+
